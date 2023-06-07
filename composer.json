@@ -1,0 +1,25 @@
+{
+    "name": "byk/excel",
+    "description": "php excel导出",
+    "type": "library",
+    "require": {
+        "php": "^7.1",
+        "phpoffice/phpspreadsheet": "^1.28"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Byk\\Excel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "白亚坤",
+            "email": "otherusedemail@163.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
