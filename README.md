@@ -124,7 +124,7 @@ try {
     ->create(function (\PhpOffice\PhpSpreadsheet\Spreadsheet $excel,$header, $data){
         //处理逻辑
     })//生成数据
-    ->save($fileName);//下载
+    ->save($fileName);//保存为文件
     // $res===true 保存成功，否则返回的是错误信息
 } catch (\Exception $e) {
 }
