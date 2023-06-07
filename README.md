@@ -56,7 +56,7 @@ try {
     $res = Excel
     ::instance()//初始化
     ->setWidth(20)//设置单元格默认宽度
-    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用户合并某列的三维数组
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组
     ->setHeader($headers)//设置标题头数据
     ->setData($data)//设置要填充的数据
     ->setFileType('xls')//设置导出的文件格式
@@ -87,7 +87,7 @@ try {
     Excel
     ::instance()//初始化
     ->setWidth(20)//设置单元格默认宽度
-    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用户合并某列的三维数组
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组
     ->setHeader($headers)//设置标题头数据
     ->setData($data)//设置要填充的数据
     ->setFileType('xls')//设置导出的文件格式
@@ -117,7 +117,7 @@ try {
     $res = Excel
     ::instance()//初始化
     ->setWidth(20)//设置单元格默认宽度
-    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用户合并某列的三维数组
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组
     ->setHeader($headers)//设置标题头数据
     ->setData($data)//设置要填充的数据
     ->setFileType('xls')//设置导出的文件格式
