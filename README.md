@@ -84,7 +84,7 @@ $data = [
 // 下载的文件名
 $fileName = 'test.xls';
 try {
-    $res = Excel
+    Excel
     ::instance()//初始化
     ->setWidth(20)//设置单元格默认宽度
     ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用户合并某列的三维数组
@@ -93,7 +93,6 @@ try {
     ->setFileType('xls')//设置导出的文件格式
     ->create()//生成数据
     ->download($fileName);//下载
-    // $res===true 保存成功，否则返回的是错误信息
 } catch (\Exception $e) {
 }
 ``` 
