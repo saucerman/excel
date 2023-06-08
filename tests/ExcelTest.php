@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ExcelTest extends TestCase
 {
-   /* public function testSave()
+    public function testSave()
     {
         $headers = [
             ['field'=>'name','title'=>'姓名'],
@@ -103,7 +103,7 @@ class ExcelTest extends TestCase
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
-    }*/
+    }
 
     public function testSheet()
     {
