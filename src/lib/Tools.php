@@ -2,6 +2,8 @@
 
 namespace Byk\Excel\lib;
 
+use Byk\Excel\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class Tools
@@ -108,5 +110,31 @@ class Tools
                 }
             }
         }
+    }
+
+    public static function processingSheetData(Spreadsheet $spreadsheet,array $sheets,array $data,array $params = []){
+        $sheetIndex = 0;
+        foreach ($sheets as $key=> $sheet){
+            if ($sheetIndex>0){
+                $spreadsheet->createSheet();
+            }
+            $spreadsheet->setActiveSheetIndex($sheetIndex);
+
+            $activeSheet = $spreadsheet->getActiveSheet();
+            if (isset($params['width']) and $params['width']>0){
+                $activeSheet->getDefaultColumnDimension()->setWidth($params['width']); //设置列默认宽度
+            }
+            if (isset($sheet['sheet'])){
+                $activeSheet->setTitle($sheet['sheet']);
+            }
+            if (isset($sheet['data_type']) and $sheet['data_type']==2){
+                self::processingData2($activeSheet,$sheet['headers'], $data[$key] ?? []);
+            }else{
+                self::processingData($activeSheet,$sheet['headers'],$data[$key]??[]);
+            }
+            $sheetIndex++;
+        }
+        //重置为第一个工作表
+        $spreadsheet->setActiveSheetIndex(0);
     }
 }

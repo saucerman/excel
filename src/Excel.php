@@ -63,20 +63,40 @@ class Excel
         }
         $num = 1;
         foreach ($header as &$value){
-            if (!isset($value['title'])){
-                throw new \Exception('缺失标题title参数');
+            if (!isset($value['headers'])){
+                if (!isset($value['title'])){
+                    throw new \Exception('缺失标题title参数'.key($value));
+                }
+                $value['letter'] = Tools::numToExcelLetter($num);
+                $value = array_merge(
+                    [
+                        'field' => '',
+                        'wrap_text' => false,
+                        'width' => 0,
+                        'merge'=>false
+                    ],
+                    $value
+                );
+                $num++;
+            }else{
+                $num = 1;
+                foreach ($value['headers'] as &$item){
+                    if (!isset($item['title'])){
+                        throw new \Exception('缺失标题title参数');
+                    }
+                    $item['letter'] = Tools::numToExcelLetter($num);
+                    $item = array_merge(
+                        [
+                            'field' => '',
+                            'wrap_text' => false,
+                            'width' => 0,
+                            'merge'=>false
+                        ],
+                        $item
+                    );
+                    $num++;
+                }
             }
-            $value['letter'] = Tools::numToExcelLetter($num);
-            $value = array_merge(
-                [
-                    'field' => '',
-                    'wrap_text' => false,
-                    'width' => 0,
-                    'merge'=>false
-                ],
-                $value
-            );
-            $num++;
         }
         unset($value);
         $this->header = $header;
@@ -96,7 +116,7 @@ class Excel
 
     /**
      * 设置数据类型
-     * @param int $dataType 数据类型，1.二维数组，2.三维数组
+     * @param int $dataType 数据类型，1.二维数组，2.三维数组 3.多个工作表
      * @return $this
      */
     public function setDataType(int $dataType = 1)
@@ -138,6 +158,8 @@ class Excel
             call_user_func_array($callback, [$this->excel,$this->header, $this->data]);
         } elseif ($this->dataType == 2) {
             Tools::processingData2($activeSheet, $this->header, $this->data);
+        } elseif ($this->dataType == 3){
+            Tools::processingSheetData($this->excel,$this->header,$this->data,['width'=>$this->width]);
         } else {
             Tools::processingData($activeSheet, $this->header, $this->data);
         }
