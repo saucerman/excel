@@ -12,7 +12,7 @@ composer require byk/excel
 
 1.  导出为文件
 ```php
-use Byk\Excel\Excel;
+use Excel\Excel;
 $headers = [
             ['field'=>'name','title'=>'姓名'],
             ['field'=>'age','title'=>'年龄'],
@@ -37,7 +37,7 @@ try {
 ```
 2.  导出文件并合并某列
 ```php
-use Byk\Excel\Excel;
+use Excel\Excel;
 $headers = [
     ['field'=>'name','title'=>'姓名','merge'=>true],
     ['field'=>'goods','title'=>'商品'],
@@ -68,7 +68,7 @@ try {
 ```
 3.  下载文件
 ```php
-use Byk\Excel\Excel;
+use Excel\Excel;
 $headers = [
     ['field'=>'name','title'=>'姓名','merge'=>true],
     ['field'=>'goods','title'=>'商品'],
@@ -98,7 +98,7 @@ try {
 ``` 
 4. 自定义处理数据
 ```php
-use Byk\Excel\Excel;
+use Excel\Excel;
 $headers = [
     ['field'=>'name','title'=>'姓名','merge'=>true],
     ['field'=>'goods','title'=>'商品'],
@@ -131,7 +131,7 @@ try {
 ```
 5. 多个工作表
 ```php
-use Byk\Excel\Excel;
+use Excel\Excel;
 $header = [
     [
         //工作表标题（必须）

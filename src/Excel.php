@@ -1,8 +1,8 @@
 <?php
 
-namespace Byk\Excel;
+namespace Excel;
 
-use Byk\Excel\lib\Tools;
+use Excel\lib\Tools;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;

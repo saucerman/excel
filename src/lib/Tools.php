@@ -1,8 +1,7 @@
 <?php
 
-namespace Byk\Excel\lib;
+namespace Excel\lib;
 
-use Byk\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -89,9 +88,17 @@ class Tools
                 'field' => $field,
                 'title' => $title,
                 'merge' => $merge,
+                'wrap_text' => $wrapText,
+                'width' => $width,
                 'letter' => $letter,
             ] = $header;
             $activeSheet->setCellValue($letter.'1',$title);
+            if ($wrapText) {
+                $activeSheet->getStyle($letter)->getAlignment()->setWrapText(true);
+            }
+            if ((int)$width > 0) {
+                $activeSheet->getColumnDimension($letter)->setWidth($width);
+            }
             $row = 2;
             foreach ($data as $item){
                 $startRow = $row;

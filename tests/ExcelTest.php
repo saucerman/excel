@@ -2,7 +2,7 @@
 
 namespace tests;
 
-use Byk\Excel\Excel;
+use Excel\Excel;
 use PHPUnit\Framework\TestCase;
 
 class ExcelTest extends TestCase
@@ -19,7 +19,7 @@ class ExcelTest extends TestCase
             ['name'=>'王五','age'=>20],
             ['name'=>'赵六','age'=>23],
         ];
-        $fileName = __DIR__.'/test.xls';
+        $fileName = __DIR__.'/test1.xls';
         try {
             $res = Excel::instance()->setWidth(20)->setHeader($headers)->setData($data)->setFileType('xls')->create()->save($fileName);
             $this->assertTrue($res,$res);

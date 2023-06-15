@@ -12,7 +12,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Byk\\Excel\\": "src/"
+            "Excel\\": "src/"
         }
     },
     "authors": [
