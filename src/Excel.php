@@ -2,7 +2,7 @@
 
 namespace Excel;
 
-use Excel\lib\Tools;
+use excel\lib\Tools;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Exception;
 /**
  *
  */
-class Excel
+final class Excel
 {
     /**
      * @var object
@@ -36,6 +36,7 @@ class Excel
      * @var object
      */
     private $excel;
+    private $freeze = false;
 
     private $fileType = 'xlsx';
 
@@ -53,7 +54,8 @@ class Excel
 
     /**
      * 设置标题
-     * @param array $header
+     * @param array $header 标题
+     * <div id="function.setHeader" class="refentry"> <div class="refnamediv"><p class="para"><div class="example" id="example-setHeader1"><p><strong>Example #1<span class="function"><strong style="color:#CC7832">setHeader()</strong></span><span class="parameter" style="color:#3A95FF">dataType=1|2</span>结构</strong></p><div class="example-contents"><div class="phpcode" style="border-color:gray;background:#232525"><span><span style="color: #000000"><span style="color: #9876AA">&lt;?php<br /></span><span style="color: #9876AA">$headers&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #007700">[</span><br /><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field'</span><span style="color: #007700">=></span><span style="color: #DD0000">'date'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;字段名称，可为空<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'title'</span><span style="color: #007700">=></span><span style="color: #DD0000">'日期'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;标题名称<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'wrap_text'</span><span style="color: #007700">=></span><span style="color: #9876AA">true</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;开启换行<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'format_code'</span><span style="color: #007700">=></span><span style="color: #DD0000">'str'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;内容格式<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'total'</span><span style="color: #007700">=></span><span style="color: #9876AA">false</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;关闭合计列<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'vertical'</span><span style="color: #007700">=></span><span style="color: #DD0000">'center'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;垂直居中<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'horizontal'</span><span style="color: #007700">=></span><span style="color: #DD0000">'center'</span></span><span style="color: #FF8000">//&nbsp;水平居中<br /></span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />];<br /><br /><br /></span></span></div></div></div></p><p class="para"><div class="example" id="example-setHeader2"><p><strong>Example #2<span class="function"><strong style="color:#CC7832">setHeader()</strong></span><span class="parameter" style="color:#3A95FF">dataType=3</span>结构</strong></p><div class="example-contents"><div class="phpcode" style="border-color:gray;background:#232525"><span><span style="color: #000000"><span style="color: #9876AA">&lt;?php<br /></span><span style="color: #9876AA">$headers&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #007700">[</span><br /><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'sheet'</span><span style="color: #007700">=></span><span style="color: #DD0000">'工作表名称'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;工作表名称（可选）<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'data_type'</span><span style="color: #007700">=></span><span style="color: #9876AA">2</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;工作表数据类型（可选），默认：1<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'headers'</span><span style="color: #007700">=></span><span style="color: #007700">[ <br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field'</span><span style="color: #007700">=></span><span style="color: #DD0000">'date'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;字段名称，可为空<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'title'</span><span style="color: #007700">=></span><span style="color: #DD0000">'日期'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;标题名称<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'wrap_text'</span><span style="color: #007700">=></span><span style="color: #9876AA">true</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;开启换行<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'format_code'</span><span style="color: #007700">=></span><span style="color: #DD0000">'str'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;内容格式<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'total'</span><span style="color: #007700">=></span><span style="color: #9876AA">false</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;关闭合计列<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'vertical'</span><span style="color: #007700">=></span><span style="color: #DD0000">'center'</span><span style="color: #007700">,</span><span style="color: #FF8000">//&nbsp;垂直居中<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'horizontal'</span><span style="color: #007700">=></span><span style="color: #DD0000">'center'</span></span><span style="color: #FF8000">//&nbsp;水平居中<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />];<br /><br /><br /></span></span></div></div></div> </p> </div> </div>
      * @return $this
      */
     public function setHeader(array $header)
@@ -73,7 +75,11 @@ class Excel
                         'field' => '',
                         'wrap_text' => false,
                         'width' => 0,
-                        'merge'=>false
+                        'merge'=>false,
+                        'format_code'=>'',
+                        'total'=>false,
+                        'vertical'=>'',//垂直
+                        'horizontal'=>'',//水平
                     ],
                     $value
                 );
@@ -90,7 +96,11 @@ class Excel
                             'field' => '',
                             'wrap_text' => false,
                             'width' => 0,
-                            'merge'=>false
+                            'merge'=>false,
+                            'format_code'=>'',
+                            'total'=>false,
+                            'vertical'=>'',//垂直
+                            'horizontal'=>'',//水平
                         ],
                         $item
                     );
@@ -105,7 +115,8 @@ class Excel
 
     /**
      * 设置数据
-     * @param array $data
+     * @param array $data 数据
+     * <div id="function.setData" class="refentry"> <div class="refnamediv" style="width:260px;"><p class="para"><div class="example" id="example-setData1"><p><strong>Example #1<span class="function"><strong style="color:#CC7832">setData()</strong></span><span class="parameter" style="color:#3A95FF">dataType=1</span>结构</strong></p><div class="example-contents"><div class="phpcode" style="border-color:gray;background:#232525"><span><span style="color: #000000"><span style="color: #9876AA">&lt;?php<br /></span><span style="color: #9876AA">$data&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #007700">[</span><br /><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;],<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-02'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />];</span></span></div></div></div></p><p class="para"><div class="example" id="example-setData2"><p><strong>Example #2<span class="function"><strong style="color:#CC7832">setData()</strong></span><span class="parameter" style="color:#3A95FF">dataType=2</span>合并列结构</strong></p><div class="example-contents"><div class="phpcode" style="border-color:gray;background:#232525"><span><span style="color: #000000"><span style="color: #9876AA">&lt;?php<br /></span><span style="color: #9876AA">$data&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #007700">[</span><br /><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;'2024-01-01'</span><span style="color: #007700">=></span><span style="color: #007700">[<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />];</span></span></div></div></div></p><p class="para"><div class="example" id="example-setData3"><p><strong>Example #3<span class="function"><strong style="color:#CC7832">setData()</strong></span><span class="parameter" style="color:#3A95FF">dataType=3</span>多工作表结构</strong></p><div class="example-contents"><div class="phpcode" style="border-color:gray;background:#232525"><span><span style="color: #000000"><span style="color: #9876AA">&lt;?php<br /></span><span style="color: #9876AA">$data&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #007700">[</span><br /><span style="color: #FF8000">&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;工作表1<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700"></span><span style="color: #007700">],<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-02'</span><span style="color: #007700"></span><span style="color: #007700">]<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;],<br /></span><span style="color: #FF8000">&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;工作表2<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'2024-01-01'</span><span style="color: #007700">=></span><span style="color: #007700">[<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br /></span><span style="color: #007700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<br /></span><span style="color: #DD0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date'</span><span style="color: #007700">=></span><span style="color: #DD0000">'2024-01-01'</span><span style="color: #007700">,</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />&nbsp;&nbsp;&nbsp;&nbsp;]</span><span style="color: #007700"><br />];</span></span></div></div></div></p></div></div>
      * @return $this
      */
     public function setData(array $data)
@@ -116,7 +127,7 @@ class Excel
 
     /**
      * 设置数据类型
-     * @param int $dataType 数据类型，1.二维数组，2.三维数组 3.多个工作表
+     * @param int $dataType 数据类型，1.二维数组，2.三维数组
      * @return $this
      */
     public function setDataType(int $dataType = 1)
@@ -142,6 +153,12 @@ class Excel
         return $this;
     }
 
+    public function freezeHeader(bool $freeze)
+    {
+        $this->freeze = $freeze;
+        return $this;
+    }
+
     /**
      * 生成数据
      * @return $this
@@ -151,15 +168,19 @@ class Excel
         $this->excel = new Spreadsheet();
         $this->excel->setActiveSheetIndex(0);
         $activeSheet = $this->excel->getActiveSheet();
+        if ($this->freeze){
+            $activeSheet->freezePane('A2');
+        }
         if ($this->width>0){
             $activeSheet->getDefaultColumnDimension()->setWidth($this->width); //设置列默认宽度
         }
+
         if (is_callable($callback)) {
-            call_user_func_array($callback, [$this->excel,$this->header, $this->data]);
+            call_user_func_array($callback, [$this->excel,$this->header, $this->data,['width'=>$this->width,'freeze'=>$this->freeze]]);
         } elseif ($this->dataType == 2) {
             Tools::processingData2($activeSheet, $this->header, $this->data);
         } elseif ($this->dataType == 3){
-            Tools::processingSheetData($this->excel,$this->header,$this->data,['width'=>$this->width]);
+            Tools::processingSheetData($this->excel,$this->header,$this->data,['width'=>$this->width,'freeze'=>$this->freeze]);
         } else {
             Tools::processingData($activeSheet, $this->header, $this->data);
         }
@@ -176,6 +197,9 @@ class Excel
         try {
             $writer = IOFactory::createWriter($this->excel, ucfirst($this->fileType));
             $writer->save($fileName);
+            unset($this->excel,$this->header,$this->data);
+            $this->header = [];
+            $this->data = [];
             return true;
         } catch (Exception $e) {
             return $e->getMessage();

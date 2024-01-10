@@ -191,3 +191,96 @@ try {
 } catch (\Exception $e) {
 }
 ```
+6.  合计某列的
+```php
+use Excel\Excel;
+$headers = [
+    ['field'=>'name','title'=>'姓名','merge'=>true],
+    ['field'=>'goods','title'=>'商品'],
+    ['field'=>'num','title'=>'数量','total'=>true],
+];
+$data = [
+    [
+        ['name'=>'张三','goods'=>'上衣','num'=>1],
+        ['name'=>'张三','goods'=>'T恤','num'=>2],
+        ['name'=>'张三','goods'=>'外套','num'=>1],
+    ]
+];
+// 保存的文件地址
+$fileName = '/path/test.xls';
+try {
+    $res = Excel
+    ::instance()//初始化
+    ->setWidth(20)//设置单元格默认宽度
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组 3.多个工作表数据
+    ->setHeader($headers)//设置标题头数据
+    ->setData($data)//设置要填充的数据
+    ->setFileType('xls')//设置导出的文件格式
+    ->create()//生成数据
+    ->save($fileName);//保存为文件
+    // $res===true 保存成功，否则返回的是错误信息
+} catch (\Exception $e) {
+}
+```
+7.  设置某列垂直水平居中
+```php
+use Excel\Excel;
+$headers = [
+    ['field'=>'name','title'=>'姓名','merge'=>true,'vertical'=>'center','horizontal'=>'center'],
+    ['field'=>'goods','title'=>'商品'],
+    ['field'=>'num','title'=>'数量','total'=>true],
+];
+$data = [
+    [
+        ['name'=>'张三','goods'=>'上衣','num'=>1],
+        ['name'=>'张三','goods'=>'T恤','num'=>2],
+        ['name'=>'张三','goods'=>'外套','num'=>1],
+    ]
+];
+// 保存的文件地址
+$fileName = '/path/test.xls';
+try {
+    $res = Excel
+    ::instance()//初始化
+    ->setWidth(20)//设置单元格默认宽度
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组 3.多个工作表数据
+    ->setHeader($headers)//设置标题头数据
+    ->setData($data)//设置要填充的数据
+    ->setFileType('xls')//设置导出的文件格式
+    ->create()//生成数据
+    ->save($fileName);//保存为文件
+    // $res===true 保存成功，否则返回的是错误信息
+} catch (\Exception $e) {
+}
+```
+8.  设置某列格式
+```php
+use Excel\Excel;
+$headers = [
+    ['field'=>'name','title'=>'姓名','merge'=>true,'vertical'=>'center','horizontal'=>'center'],
+    ['field'=>'goods','title'=>'商品','format_code'=>'s'],
+    ['field'=>'num','title'=>'数量','total'=>true,'format_code'=>'0.00'],
+];
+$data = [
+    [
+        ['name'=>'张三','goods'=>'上衣','num'=>1],
+        ['name'=>'张三','goods'=>'T恤','num'=>2],
+        ['name'=>'张三','goods'=>'外套','num'=>1],
+    ]
+];
+// 保存的文件地址
+$fileName = '/path/test.xls';
+try {
+    $res = Excel
+    ::instance()//初始化
+    ->setWidth(20)//设置单元格默认宽度
+    ->setDataType(2)//设置填充数据类型，1.普通二维数组，2.用于合并某列的三维数组 3.多个工作表数据
+    ->setHeader($headers)//设置标题头数据
+    ->setData($data)//设置要填充的数据
+    ->setFileType('xls')//设置导出的文件格式
+    ->create()//生成数据
+    ->save($fileName);//保存为文件
+    // $res===true 保存成功，否则返回的是错误信息
+} catch (\Exception $e) {
+}
+```

@@ -8,6 +8,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class Tools
 {
 
+    private static $formatCodes = ['str','s','f','n','b','null','inlineStr','e','d'];
+
     /**
      * 数字转为字母
      * @param int $num 数字
@@ -50,8 +52,10 @@ class Tools
         return $result;
     }
 
-    public static function processingData(Worksheet $activeSheet,array $headers,array $data)
+    public static function processingData(Worksheet &$activeSheet,array $headers,array $data)
     {
+        $isTotal = false;
+        $totalRow = 0;
         foreach ($headers as $header)
         {
             [
@@ -60,11 +64,16 @@ class Tools
                 'wrap_text' => $wrapText,
                 'width' => $width,
                 'letter' => $letter,
+                'format_code' => $formatCode,
+                'total' => $total,
+                'vertical'=>$vertical,//垂直
+                'horizontal'=>$horizontal,//水平
             ] = $header;
             $activeSheet->setCellValue($letter . '1', $title);
             if ($wrapText) {
                 $activeSheet->getStyle($letter)->getAlignment()->setWrapText(true);
             }
+
             if ((int)$width > 0) {
                 $activeSheet->getColumnDimension($letter)->setWidth($width);
             }
@@ -74,27 +83,68 @@ class Tools
                 if (!empty($field)) {
                     $content = $value[$field] ?? $field;
                 }
-                $activeSheet->setCellValue($letter . $row, $content);
+                if ($formatCode and in_array($formatCode,self::$formatCodes)){
+                    $activeSheet->setCellValueExplicit($letter . $row, $content,$formatCode);
+                }else{
+                    $activeSheet->setCellValue($letter . $row, $content);
+                    if ($formatCode){
+                        $activeSheet->getStyle($letter. $row)->getNumberFormat()->setFormatCode($formatCode);
+                    }
+                }
+                if (!empty($vertical)){
+                    $activeSheet->getStyle($letter.$row)->getAlignment()->setVertical($vertical);
+                }
+                if (!empty($horizontal)){
+                    $activeSheet->getStyle($letter.$row)->getAlignment()->setHorizontal($horizontal);
+                }
                 $row++;
             }
+            $totalRow = $row;
+            if ($total===true and $row>2){
+                if (!$isTotal){
+                    $isTotal = true;
+                }
+                $startRow = 2;
+                $endRow = $row-1;
+                if ($formatCode and in_array($formatCode,self::$formatCodes)){
+                    $activeSheet->setCellValueExplicit($letter . $row, "=sum({$letter}{$startRow}:{$letter}{$endRow})",$formatCode);
+                }else{
+                    $activeSheet->setCellValue($letter . $row, "=sum({$letter}{$startRow}:{$letter}{$endRow})");
+                    if ($formatCode){
+                        $activeSheet->getStyle($letter. $row)->getNumberFormat()->setFormatCode($formatCode);
+                    }
+                }
+            }
+        }
+        if ($isTotal){
+            $activeSheet->setCellValue($headers[0]['letter'] . $totalRow, '合计');
         }
         return $activeSheet;
     }
 
-    public static function processingData2(Worksheet $activeSheet,array $headers,array $data)
+    public static function processingData2(Worksheet &$activeSheet,array $headers,array $data)
     {
+        $isTotal = false;
+        $totalRow = 0;
         foreach ($headers as $header){
             [
                 'field' => $field,
                 'title' => $title,
                 'merge' => $merge,
-                'wrap_text' => $wrapText,
-                'width' => $width,
                 'letter' => $letter,
+                'width' => $width,
+                'wrap_text' => $wrapText,
+                'format_code' => $formatCode,
+                'total' => $total,
+                'vertical'=>$vertical,//垂直
+                'horizontal'=>$horizontal,//水平
             ] = $header;
             $activeSheet->setCellValue($letter.'1',$title);
             if ($wrapText) {
                 $activeSheet->getStyle($letter)->getAlignment()->setWrapText(true);
+            }
+            if ($formatCode and !in_array($formatCode,self::$formatCodes)){
+                $activeSheet->getStyle($letter)->getNumberFormat()->setFormatCode($formatCode);
             }
             if ((int)$width > 0) {
                 $activeSheet->getColumnDimension($letter)->setWidth($width);
@@ -107,7 +157,20 @@ class Tools
                     if (!empty($field) and isset($value[$field])){
                         $content = $value[$field];
                     }
-                    $activeSheet->setCellValue($letter.$row,$content);
+                    if ($formatCode and in_array($formatCode,self::$formatCodes)){
+                        $activeSheet->setCellValueExplicit($letter . $row, $content,$formatCode);
+                    }else{
+                        $activeSheet->setCellValue($letter . $row, $content);
+                        if ($formatCode){
+                            $activeSheet->getStyle($letter. $row)->getNumberFormat()->setFormatCode($formatCode);
+                        }
+                    }
+                    if (!empty($vertical)){
+                        $activeSheet->getStyle($letter.$row)->getAlignment()->setVertical($vertical);
+                    }
+                    if (!empty($horizontal)){
+                        $activeSheet->getStyle($letter.$row)->getAlignment()->setHorizontal($horizontal);
+                    }
                     $row++;
                 }
                 $endRow = $row-1;
@@ -116,10 +179,28 @@ class Tools
                     $activeSheet->mergeCells($letter.$startRow.':'.$letter.$endRow);
                 }
             }
+            $totalRow = $row;
+            if ($total===true and $row>2){
+                if (!$isTotal){
+                    $isTotal = true;
+                }
+                $startRow = 2;
+                $endRow = $row-1;
+                if ($formatCode and in_array($formatCode,self::$formatCodes)){
+                    $activeSheet->setCellValueExplicit($letter . $row, "=sum({$letter}{$startRow}:{$letter}{$endRow})",$formatCode);
+                }else{
+                    $activeSheet->setCellValue($letter . $row, "=sum({$letter}{$startRow}:{$letter}{$endRow})");
+                    if ($formatCode){
+                        $activeSheet->getStyle($letter. $row)->getNumberFormat()->setFormatCode($formatCode);
+                    }
+                }
+            }
+        }
+        if ($isTotal){
+            $activeSheet->setCellValue($headers[0]['letter'] . $totalRow, '合计');
         }
     }
-
-    public static function processingSheetData(Spreadsheet $spreadsheet,array $sheets,array $data,array $params = []){
+    public static function processingSheetData(Spreadsheet &$spreadsheet,array $sheets,array $data,array $params = []){
         $sheetIndex = 0;
         foreach ($sheets as $key=> $sheet){
             if ($sheetIndex>0){
@@ -134,10 +215,20 @@ class Tools
             if (isset($sheet['sheet'])){
                 $activeSheet->setTitle($sheet['sheet']);
             }
+            if (isset($sheet['freeze'])){
+                $params['freeze'] = $sheet['freeze'];
+            }
+            if (isset($params['freeze'])){
+                if ($params['freeze']){
+                    $activeSheet->freezePane('A2');
+                }else{
+                    $activeSheet->freezePane(null);
+                }
+            }
             if (isset($sheet['data_type']) and $sheet['data_type']==2){
-                self::processingData2($activeSheet,$sheet['headers'], $data[$key] ?? []);
+                self::processingData2($activeSheet,$sheet['headers']??[], $data[$key] ?? []);
             }else{
-                self::processingData($activeSheet,$sheet['headers'],$data[$key]??[]);
+                self::processingData($activeSheet,$sheet['headers']??[],$data[$key]??[]);
             }
             $sheetIndex++;
         }
